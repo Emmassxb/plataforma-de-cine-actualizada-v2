@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-3">{{ title }}</h2>
+    <p class="lead">{{ summary }}</p>
+
+    {% if img_b64 %}
+    <div class="text-center my-4">
+        <img src="data:image/png;base64,{{ img_b64 }}" class="img-fluid rounded shadow" alt="{{ title }}">
+    </div>
+    {% endif %}
+
+    {% if tabla %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    {% for k in tabla[0].keys() %}
+                    <th scope="col">{{ k | capitalize }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in tabla %}
+                <tr>
+                    {% for v in row.values() %}
+                    <td>{{ v }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

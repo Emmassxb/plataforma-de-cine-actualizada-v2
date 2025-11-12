@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <!-- Columna izquierda -->
+  <div class="col-lg-4 col-md-5 mb-4">
+    <div class="card bg-secondary text-light mb-3 shadow-sm">
+
+      {% if movie.poster_path %}
+        {% if movie.poster_path.startswith('http') %}
+          <img src="{{ movie.poster_path }}" class="card-img-top" alt="Póster de {{ movie.title }}">
+        {% else %}
+          <img src="{{ url_for('static', filename=movie.poster_path) }}" class="card-img-top" alt="Póster de {{ movie.title }}">
+        {% endif %}
+      {% elif movie.tmdb_data and movie.tmdb_data.poster_path %}
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.tmdb_data.poster_path }}" class="card-img-top" alt="Póster de {{ movie.title }}">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/default_poster.jpg') }}" class="card-img-top" alt="Sin póster">
+      {% endif %}
+
+      <div class="card-body">
+        <h3 class="card-title">{{ movie.title }}</h3>
+        {% if movie.year %}<p><strong>Año:</strong> {{ movie.year }}</p>{% endif %}
+        {% if movie.director %}<p><strong>Director:</strong> {{ movie.director }}</p>{% endif %}
+        {% if movie.genres %}<p><strong>Géneros:</strong> {{ movie.genres | join(', ') }}</p>{% endif %}
+
+        <!-- Calificaciones -->
+        <p>
+          <strong>⭐ Calificación usuarios:</strong>
+          {{ avg_rating if avg_rating else 'Sin calificaciones locales' }}<br>
+          {% if movie.tmdb_data and movie.tmdb_data.vote_average %}
+            <strong>🌐 TMDB:</strong> {{ movie.tmdb_data.vote_average }}/10
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Trailer -->
+    {% if movie.trailer_url %}
+      <div class="mb-3 text-center">
+        <h5>🎬 Tráiler</h5>
+        <div class="ratio ratio-16x9 mb-2">
+          <iframe 
+            src="{{ movie.trailer_url | replace('watch?v=', 'embed/') }}" 
+            title="Tráiler de {{ movie.title }}" 
+            allowfullscreen></iframe>
+        </div>
+        <a href="{{ movie.trailer_url }}" target="_blank" class="watchlist-button">Ver en YouTube</a>
+      </div>
+    {% else %}
+      <p class="text-center text-muted">No hay tráiler disponible</p>
+    {% endif %}
+  </div>
+
+  <!-- Columna derecha -->
+  <div class="col-lg-8 col-md-7">
+
+    {% if is_admin %}
+      <div class="mb-3 text-end">
+        <a href="{{ url_for('admin_edit_movie', movieId=movie.movieId) }}" class="watchlist-button">✏️ Editar Película</a>
+      </div>
+    {% endif %}
+
+    {% if ratings_graph %}
+      <div class="mb-4">
+        <h4>Distribución de Calificaciones</h4>
+        <img src="data:image/png;base64,{{ ratings_graph }}" alt="Gráfica de calificaciones" class="img-fluid rounded shadow-sm">
+      </div>
+    {% endif %}
+
+    {% if 'user_id' in session %}
+      <div class="card mb-4 bg-dark text-light p-3 shadow-sm">
+        <h5>Agregar reseña</h5>
+        <form method="POST" action="{{ url_for('rate_movie', movieId=movie.movieId) }}">
+          <div class="mb-2">
+            <label>Calificación (0 a 10)</label>
+            <input name="rating" type="number" min="0" max="10" step="0.1" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Reseña</label>
+            <textarea name="review_text" class="form-control" rows="3" placeholder="Escribe tu reseña aquí..."></textarea>
+          </div>
+          <button type="submit" class="watchlist-button">Enviar reseña</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <!-- Reseñas locales -->
+    <h4 class="mb-3">📝 Reseñas de usuarios</h4>
+
+    {% if reviews %}
+      <div class="d-flex flex-column gap-3">
+        {% for r in reviews %}
+          <div class="card bg-dark text-light shadow-sm border-0 p-3">
+            <div class="d-flex align-items-center mb-2">
+              <!-- Avatar inicial -->
+              <div class="rounded-circle bg-secondary text-center text-light me-3" style="width:40px; height:40px; line-height:40px; font-weight:bold;">
+                {{ r.username[0]|upper }}
+              </div>
+
+              <!-- Nombre con enlace -->
+              <div>
+                <a href="{{ url_for('user_profile', username=r.username) }}" class="text-light fw-bold text-decoration-none">
+                  {{ r.username }}
+                </a><br>
+                <small class="text-muted">
+                  {{ r.created_at.strftime('%Y-%m-%d %H:%M') if r.created_at else 'Sin fecha' }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Calificación y texto -->
+            <div class="ps-1">
+              <p class="mb-1"><strong>⭐ {{ r.rating }}/10</strong></p>
+              <p class="mb-0">{{ r.text }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No hay reseñas locales todavía. ¡Sé el primero en opinar!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

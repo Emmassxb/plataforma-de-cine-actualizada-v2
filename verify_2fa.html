@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación en dos pasos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="verify-container">
+        <h2>Verificación en dos pasos</h2>
+        <p>Se envió un código a tu correo electrónico.<br>Ingresa el código de 6 dígitos:</p>
+
+        <form method="POST">
+            <input type="text" name="code" maxlength="6" required placeholder="••••••">
+            <button type="submit">Verificar</button>
+        </form>
+
+        <p><a href="{{ url_for('login') }}" class="button-link">Volver al inicio de sesión</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+/* Base */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #14171C;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+/* Encabezado */
+header {
+    background-color: #2C343F;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    color: #FFFFFF;
+    font-size: 2.5em;
+    margin: 0;
+}
+
+/* Navegación */
+nav {
+    background-color: #2C343F;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #FFFFFF;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+nav a:hover {
+    color: #00E054;
+}
+
+/* Tarjetas de Películas */
+.movie-card {
+    background-color: #2C343F;
+    border-radius: 8px;
+    margin: 15px;
+    overflow: hidden;
+    width: 200px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+}
+
+.movie-card h3 {
+    color: #FFFFFF;
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.movie-card p {
+    color: #40BCF4;
+    font-size: 1em;
+    margin: 0 0 10px;
+}
+
+/* Botones */
+button {
+    background-color: #00E054;
+    border: none;
+    border-radius: 5px;
+    color: #FFFFFF;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #F27405;
+}
+.watchlist-button {
+    background-color: #00bfff;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.watchlist-button:hover {
+    background-color: #009acd;
+}
+/* ==== Hipervínculos tipo botón ==== */
+a.button-link {
+    display: inline-block;
+    background-color: #00E054;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+a.button-link:hover {
+    background-color: #F27405;
+    transform: scale(1.03);
+}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Registro{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card bg-secondary text-light">
+      <div class="card-body">
+        <h4>Registro</h4>
+        <form method="POST">
+          <div class="mb-3"><label>Usuario</label><input name="username" class="form-control" required></div>
+          <div class="mb-3"><label>Email (opcional)</label><input name="email" class="form-control"></div>
+          <div class="mb-3"><label>Contraseña</label><input type="password" name="password" class="form-control" required></div>
+          <button class="btn btn-light">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

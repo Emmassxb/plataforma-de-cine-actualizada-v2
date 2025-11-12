@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<h2>Editar Perfil — {{ user.username }}</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <!-- Foto de perfil actual -->
+    {% if user.profile_pic %}
+    <div class="mb-3">
+        <label>Foto de perfil actual:</label><br>
+        <img src="{{ url_for('static', filename=user.profile_pic) }}" alt="Foto de perfil" width="120" class="rounded-circle">
+    </div>
+    {% endif %}
+
+    <!-- Subir nueva foto -->
+    <div class="mb-3">
+        <label for="profile_pic" class="form-label">Cambiar foto de perfil</label>
+        <input type="file" name="profile_pic" class="form-control">
+    </div>
+
+    <!-- Películas favoritas -->
+    <div class="mb-3">
+        <label for="fav_movies" class="form-label">Películas favoritas (separadas por | )</label>
+        <input type="text" name="fav_movies" class="form-control" value="{{ user.fav_movies|join(' | ') }}">
+        <small class="form-text text-muted">Ejemplo: Película1 | Película2 | Película3</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="{{ url_for('perfil') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

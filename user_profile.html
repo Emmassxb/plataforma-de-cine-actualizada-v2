@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Perfil de {{ user.username }}</h2>
+
+    <div class="profile-info">
+        <p><strong>Correo:</strong> {{ user.email }}</p>
+        <p><strong>Rol:</strong> {{ user.rol }}</p>
+        <p><strong>Fecha de registro:</strong> {{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'No disponible' }}</p>
+    </div>
+
+    <div class="user-reviews">
+        <h3>Reseñas del usuario</h3>
+        {% if user.reviews %}
+            <ul>
+                {% for review in user.reviews %}
+                    <li>
+                        <strong>{{ review.movie_title }}</strong> – {{ review.rating }}/5<br>
+                        <em>{{ review.created_at.strftime('%Y-%m-%d %H:%M') if review.created_at else 'Sin fecha' }}</em><br>
+                        {{ review.comment }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Este usuario aún no tiene reseñas.</p>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn">Volver al inicio</a>
+</div>
+{% endblock %}

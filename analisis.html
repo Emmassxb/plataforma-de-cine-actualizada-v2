@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Análisis Disponibles</h2>
+
+    <form method="GET" action="" onsubmit="mostrarCarga()" class="mb-4 d-flex">
+        <input type="text" name="busqueda" placeholder="Buscar..." value="{{ request.args.get('busqueda','') }}"
+               class="form-control me-2">
+        <button type="submit" class="btn btn-outline-light">Buscar</button>
+    </form>
+
+    <div id="cargando" style="display:none; text-align:center; margin:20px;">
+        <div class="spinner"></div>
+        <p class="mt-2">Procesando análisis... por favor espera.</p>
+    </div>
+
+    <div class="list-group">
+        {% for a in analyses %}
+        <a href="{{ url_for('run_admin_analysis', analysis_id=a.id) }}?busqueda={{ request.args.get('busqueda','') }}&spark=0"
+           onclick="mostrarCarga()"
+           class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            🔎 {{ a.title }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #00ff88;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+function mostrarCarga() {
+    document.getElementById("cargando").style.display = "block";
+}
+</script>
+{% endblock %}

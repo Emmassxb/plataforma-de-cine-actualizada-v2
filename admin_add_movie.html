@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if movie %}Editar Película{% else %}Agregar Película{% endif %}
+{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">{% if movie %}Editar{% else %}Agregar{% endif %} Película</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+  <!-- Título -->
+  <div class="mb-3">
+    <label for="title" class="form-label">Título</label>
+    <input id="title" name="title" class="form-control" required value="{{ movie.title if movie else '' }}">
+  </div>
+
+  <!-- Año -->
+  <div class="mb-3">
+    <label for="year" class="form-label">Año</label>
+    <input id="year" name="year" class="form-control" type="number" min="1888" max="2100"
+           value="{{ movie.year if movie else '' }}">
+  </div>
+
+  <!-- Géneros -->
+  <div class="mb-3">
+    <label for="genres" class="form-label">Géneros (separados por |)</label>
+    <input id="genres" name="genres" class="form-control"
+           value="{{ movie.genres|join('|') if movie and movie.genres else '' }}">
+  </div>
+
+  <!-- Director -->
+  <div class="mb-3">
+    <label for="director" class="form-label">Director</label>
+    <input id="director" name="director" class="form-control" value="{{ movie.director if movie else '' }}">
+  </div>
+
+  <!-- Cast -->
+  <div class="mb-3">
+    <label for="cast" class="form-label">Reparto (separados por |)</label>
+    <input id="cast" name="cast" class="form-control"
+           value="{{ movie.cast|join('|') if movie and movie.cast else '' }}">
+  </div>
+
+  <!-- Poster -->
+  <div class="mb-3">
+    <label class="form-label">Póster (elige una opción)</label>
+    <input type="file" name="poster_file" accept="image/*" class="form-control mb-2">
+    <input type="url" name="poster_url" placeholder="o pega un enlace de imagen (jpg/png)" class="form-control"
+           value="{{ movie.poster_path if movie and 'http' in movie.poster_path else '' }}">
+  </div>
+
+  <!-- Trailer -->
+  <div class="mb-3">
+    <label class="form-label">Trailer (elige una opción)</label>
+    <input type="file" name="trailer_file" accept="video/mp4,video/webm,video/ogg" class="form-control mb-2">
+    <input type="url" name="trailer_url" placeholder="o pega un enlace de YouTube" class="form-control"
+           value="{{ movie.trailer_url if movie and movie.trailer_url else '' }}">
+  </div>
+
+  <div class="text-center mt-4">
+    <button type="submit" class="btn btn-primary">
+      {% if movie %}Actualizar{% else %}Guardar{% endif %}
+    </button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Cancelar</a>
+  </div>
+
+</form>
+{% endblock %}

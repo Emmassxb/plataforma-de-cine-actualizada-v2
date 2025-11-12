@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Película - {{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Editar Película</h2>
+
+  <form method="POST" enctype="multipart/form-data" class="form-edit-movie">
+
+    <!-- Título -->
+    <div class="form-group mb-3">
+      <label>Título</label>
+      <input type="text" name="title" class="form-control" value="{{ movie.title }}" required>
+    </div>
+
+    <!-- Año -->
+    <div class="form-group mb-3">
+      <label>Año</label>
+      <input type="text" name="year" class="form-control" value="{{ movie.year or '' }}">
+    </div>
+
+    <!-- Géneros -->
+    <div class="form-group mb-3">
+      <label>Géneros (separados por |)</label>
+      <input type="text" name="genres" class="form-control" value="{{ movie.genres|join('|') if movie.genres else '' }}">
+    </div>
+
+    <!-- Director -->
+    <div class="form-group mb-3">
+      <label>Director</label>
+      <input type="text" name="director" class="form-control" value="{{ movie.director or '' }}">
+    </div>
+
+    <!-- Reparto -->
+    <div class="form-group mb-3">
+      <label>Reparto (separado por |)</label>
+      <input type="text" name="cast" class="form-control" value="{{ movie.cast|join('|') if movie.cast else '' }}">
+    </div>
+
+    <!-- Poster actual -->
+    <div class="form-group mb-3">
+      <label class="fw-bold">Póster actual</label><br>
+      {% if movie.poster_path %}
+        {% if 'http' in movie.poster_path %}
+          <img src="{{ movie.poster_path }}" alt="Póster actual" style="height:150px; border-radius:6px;">
+        {% else %}
+          <img src="{{ url_for('static', filename=movie.poster_path) }}" alt="Póster actual" style="height:150px; border-radius:6px;">
+        {% endif %}
+      {% else %}
+        <p class="text-muted">No hay póster disponible.</p>
+      {% endif %}
+    </div>
+
+    <!-- Nuevo póster -->
+    <div class="form-group mb-3">
+      <label>Nuevo póster (elige una opción)</label>
+      <input type="file" name="poster_file" accept=".png,.jpg,.jpeg" class="form-control mb-2">
+      <input type="url" name="poster_url" placeholder="o pega un enlace del póster" class="form-control"
+             value="{{ movie.poster_path if movie.poster_path and 'http' in movie.poster_path else '' }}">
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Trailer actual -->
+    <div class="form-group mb-3">
+      <label class="fw-bold">Trailer actual</label><br>
+      {% if movie.trailer_path %}
+        <video width="480" controls class="rounded shadow-sm mb-3">
+          <source src="{{ url_for('static', filename=movie.trailer_path) }}" type="video/mp4">
+          Tu navegador no soporta video.
+        </video>
+      {% elif movie.trailer_url %}
+        {% if "youtube.com" in movie.trailer_url or "youtu.be" in movie.trailer_url %}
+          {% set embed_url = movie.trailer_url.replace("watch?v=", "embed/").replace("youtu.be/", "www.youtube.com/embed/") %}
+          <iframe width="480" height="270" src="{{ embed_url }}" frameborder="0" allowfullscreen class="rounded shadow-sm mb-3"></iframe>
+        {% else %}
+          <a href="{{ movie.trailer_url }}" target="_blank" class="btn btn-outline-light mb-3">Ver trailer</a>
+        {% endif %}
+      {% else %}
+        <p class="text-muted">No hay trailer disponible.</p>
+      {% endif %}
+    </div>
+
+    <!-- Nuevo trailer -->
+    <div class="form-group mb-3">
+      <label>Nuevo trailer (elige una opción)</label>
+      <input type="file" name="trailer_file" accept="video/mp4,video/webm,video/ogg" class="form-control mb-2">
+      <input type="url" name="trailer_url" placeholder="o pega un enlace de YouTube" class="form-control"
+             value="{{ movie.trailer_url if movie and movie.trailer_url else '' }}">
+    </div>
+
+    <!-- Eliminar trailer -->
+    <div class="form-check mt-3">
+      <input class="form-check-input" type="checkbox" name="delete_trailer" id="delete_trailer">
+      <label class="form-check-label" for="delete_trailer">
+        Eliminar trailer actual
+      </label>
+    </div>
+
+    <!-- Botones -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Cancelar</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
